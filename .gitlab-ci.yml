@@ -1,0 +1,104 @@
+spec:
+  inputs:
+    webhook-url:
+      description: "The webhook URL to send Notification"
+      type: string
+    status:
+      description: "Status of the pipeline (e.g., success, failure)."
+      type: string
+    message:
+      description: "Main message for the notification."
+      type: string
+    project:
+      description: "Project name."
+      type: string
+    branch:
+      description: "Branch name (e.g., main, develop)."
+      type: string
+    repository:
+      description: "Repository name (owner/repo)."
+      type: string
+    commit:
+      description: "Commit SHA."
+      type: string
+    cloud-provider:
+      description: "Cloud provider information."
+      type: string
+    user:
+      description: "User who triggered the workflow."
+      type: string
+    build-url:
+      description: "URL to the pipeline run."
+      type: string
+    # Vulnerability Docker Image Counts (optional)
+    critical-count:
+      description: "Number of critical vulnerabilities."
+      type: string
+      default: ""
+    high-count:
+      description: "Number of high vulnerabilities."
+      type: string
+      default: ""
+    medium-count:
+      description: "Number of medium vulnerabilities."
+      type: string
+      default: ""
+    low-count:
+      description: "Number of low vulnerabilities."
+      type: string
+      default: ""
+    unknown-count:
+      description: "Number of unknown vulnerabilities."
+      type: string
+      default: ""
+    total-count:
+      description: "Total number of vulnerabilities."
+      type: string
+      default: ""
+---
+
+stages:
+- notify
+
+notify:
+  stage: notify
+  image: alpine:latest
+  before_script:
+  - apk add --no-cache curl jq
+  script:
+  - |
+    # JSON base com campos obrigatórios
+    payload=$(jq -n \
+      --arg status        "$[[inputs.status]]" \
+      --arg message       "$[[inputs.message]]" \
+      --arg project       "$[[inputs.project]]" \
+      --arg branch        "$[[inputs.branch]]" \
+      --arg repository    "$[[inputs.repository]]" \
+      --arg commit        "$[[inputs.commit]]" \
+      --arg cloudprovider "$[[inputs.cloud-provider]]" \
+      --arg user          "$[[inputs.user]]" \
+      --arg buildurl      "$[[inputs.build-url]]" \
+      '{status: $status, message: $message, project: $project, branch: $branch, repository: $repository, commit: $commit, cloud_provider: $cloudprovider, user: $user, build_url: $buildurl}'
+    )
+
+    # Adiciona vulnerabilidades se critical-count não estiver vazio
+    if [ -n "$[[inputs.critical-count]]" ]; then
+      payload=$(echo "$payload" | jq \
+        --arg crit "$[[inputs.critical-count]]" \
+        --arg high "$[[inputs.high-count]]" \
+        --arg med  "$[[inputs.medium-count]]" \
+        --arg low  "$[[inputs.low-count]]" \
+        --arg unk  "$[[inputs.unknown-count]]" \
+        --arg tot  "$[[inputs.total-count]]" \
+        '. + {vulnerabilities: {critical: $crit, high: $high, medium: $med, low: $low, unknown: $unk, total: $tot}}'
+      )
+    fi
+
+    echo "📤 Payload final:"
+    echo "$payload" | jq .
+
+    # Envia para o webhook informado
+    curl -s -X POST \
+      -H "Content-Type: application/json" \
+      -d "$payload" \
+      "$[[inputs.webhook-url]]"
