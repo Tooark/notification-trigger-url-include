@@ -26,13 +26,44 @@ This Gitlab include sends a notification to a specified URL with details about t
 ## 🚀 How to Use
 
 ```yaml
-
+include:
+- remote: 'https://raw.githubusercontent.com/Tooark/notification-trigger-url-include/main/.gitlab-ci.yml'
+  inputs:
+    webhook-url: "https://example.com/webhook"
+    status: "success"
+    message: "Pipeline CI/CD - success"
+    project: "$CI_PROJECT_NAME"
+    branch: "$CI_COMMIT_BRANCH"
+    repository: "$CI_REPOSITORY_URL"
+    commit: "$CI_COMMIT_SHORT_SHA"
+    cloud-provider: "AWS"
+    user: "$GITLAB_USER_NAME"
+    build-url: "$CI_PIPELINE_URL"
 ```
 
 ## 🚀 How to Use with Docker Vulnerabilities Report
 
 ```yaml
-
+include:
+- remote: 'https://raw.githubusercontent.com/Tooark/notification-trigger-url-include/main/.gitlab-ci.yml'
+  inputs:
+    webhook-url: "https://example.com/webhook"
+    status: "success"
+    message: "Pipeline CI/CD - success"
+    project: "$CI_PROJECT_NAME"
+    branch: "$CI_COMMIT_BRANCH"
+    repository: "$CI_REPOSITORY_URL"
+    commit: "$CI_COMMIT_SHORT_SHA"
+    cloud-provider: "AWS"
+    user: "$GITLAB_USER_NAME"
+    build-url: "$CI_PIPELINE_URL"
+    ####
+    critical-count: "2"
+    high-count: "5"
+    medium-count: "8"
+    low-count: "3"
+    unknown-count: "1"
+    total-count: "19"
 ```
 
 ## Contribution
