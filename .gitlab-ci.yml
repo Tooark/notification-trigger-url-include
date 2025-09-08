@@ -84,12 +84,12 @@ stages:
     # Adiciona vulnerabilidades se critical-count não estiver vazio
     if [ -n "$[[inputs.critical-count]]" ]; then
       payload=$(echo "$payload" | jq \
-        --arg crit "$[[inputs.critical-count]]" \
-        --arg high "$[[inputs.high-count]]" \
-        --arg med  "$[[inputs.medium-count]]" \
-        --arg low  "$[[inputs.low-count]]" \
-        --arg unk  "$[[inputs.unknown-count]]" \
-        --arg tot  "$[[inputs.total-count]]" \
+        --arg crit "$CRITICAL" \
+        --arg high "$HIGH" \
+        --arg med  "$MEDIUM" \
+        --arg low  "$LOW" \
+        --arg unk  "$UNKNOWN" \
+        --arg tot  "$TOTAL" \
         '. + {vulnerabilities: {critical: $crit, high: $high, medium: $med, low: $low, unknown: $unk, total: $tot}}'
       )
     fi
