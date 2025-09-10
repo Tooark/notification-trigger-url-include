@@ -67,7 +67,7 @@ stages:
   - apk add --no-cache curl jq
   script:
   - |
-    bash scripts/send-trigger.sh \
+    sh scripts/send-trigger.sh \
           "$[[ inputs.status ]]" \
           "$[[ inputs.message ]]" \
           "$[[ inputs.project ]]" \
