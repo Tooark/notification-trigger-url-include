@@ -67,38 +67,20 @@ stages:
   - apk add --no-cache curl jq
   script:
   - |
-    # JSON base com campos obrigatórios
-    payload=$(jq -n \
-      --arg status        "$NOTIFICATION_STATUS" \
-      --arg message       "$[[inputs.message]]" \
-      --arg project       "$[[inputs.project]]" \
-      --arg branch        "$[[inputs.branch]]" \
-      --arg repository    "$[[inputs.repository]]" \
-      --arg commit        "$[[inputs.commit]]" \
-      --arg cloudprovider "$[[inputs.cloud-provider]]" \
-      --arg user          "$[[inputs.user]]" \
-      --arg buildurl      "$[[inputs.build-url]]" \
-      '{status: $status, message: $message, project: $project, branch: $branch, repository: $repository, commit: $commit, cloud_provider: $cloudprovider, user: $user, build_url: $buildurl}'
-    )
-
-    # Adiciona vulnerabilidades se critical-count não estiver vazio
-    if [ -n "$[[inputs.critical-count]]" ]; then
-      payload=$(echo "$payload" | jq \
-        --arg crit "$CRITICAL" \
-        --arg high "$HIGH" \
-        --arg med  "$MEDIUM" \
-        --arg low  "$LOW" \
-        --arg unk  "$UNKNOWN" \
-        --arg tot  "$TOTAL" \
-        '. + {vulnerabilities: {critical: $crit, high: $high, medium: $med, low: $low, unknown: $unk, total: $tot}}'
-      )
-    fi
-
-    echo "📤 Payload final:"
-    echo "$payload" | jq .
-
-    # Envia para o webhook informado
-    curl -s -X POST \
-      -H "Content-Type: application/json" \
-      -d "$payload" \
-      "$[[inputs.webhook-url]]"
+    bash scripts/send-trigger.sh \
+          "$[[ inputs.status ]]" \
+          "$[[ inputs.message ]]" \
+          "$[[ inputs.project ]]" \
+          "$[[ inputs.branch ]]" \
+          "$[[ inputs.repository ]]" \
+          "$[[ inputs.commit ]]" \
+          "$[[ inputs.cloud-provider ]]" \
+          "$[[ inputs.user ]]" \
+          "$[[ inputs.build-url ]]" \
+          "$[[ inputs.critical-count ]]" \
+          "$[[ inputs.high-count ]]" \
+          "$[[ inputs.medium-count ]]" \
+          "$[[ inputs.low-count ]]" \
+          "$[[ inputs.unknown-count ]]" \
+          "$[[ inputs.total-count ]]" \
+          "$[[ inputs.webhook-url ]]"
