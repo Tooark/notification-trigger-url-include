@@ -67,7 +67,7 @@ stages:
   - apk add --no-cache curl jq
   script:
   - |
-    sh https://raw.githubusercontent.com/Tooark/notification-trigger-url-include/main/scripts/send-trigger.sh \
+    curl -s https://raw.githubusercontent.com/Tooark/notification-trigger-url-include/main/scripts/send-trigger.sh | sh -s \
           "$[[ inputs.status ]]" \
           "$[[ inputs.message ]]" \
           "$[[ inputs.project ]]" \
