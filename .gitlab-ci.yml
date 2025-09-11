@@ -3,9 +3,6 @@ spec:
     webhook-url:
       description: "The webhook URL to send Notification"
       type: string
-    status:
-      description: "Status of the pipeline (e.g., success, failure)."
-      type: string
     message:
       description: "Main message for the notification."
       type: string
