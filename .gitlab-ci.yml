@@ -1,6 +1,6 @@
 spec:
   inputs:
-    webhook-url:
+    webhook_url:
       description: "The webhook URL to send Notification"
       type: string
     message:
@@ -18,37 +18,37 @@ spec:
     commit:
       description: "Commit SHA."
       type: string
-    cloud-provider:
+    cloud_provider:
       description: "Cloud provider information."
       type: string
     user:
       description: "User who triggered the workflow."
       type: string
-    build-url:
+    build_url:
       description: "URL to the pipeline run."
       type: string
     # Vulnerability Docker Image Counts (optional)
-    critical-count:
+    critical_count:
       description: "Number of critical vulnerabilities."
       type: string
       default: ""
-    high-count:
+    high_count:
       description: "Number of high vulnerabilities."
       type: string
       default: ""
-    medium-count:
+    medium_count:
       description: "Number of medium vulnerabilities."
       type: string
       default: ""
-    low-count:
+    low_count:
       description: "Number of low vulnerabilities."
       type: string
       default: ""
-    unknown-count:
+    unknown_count:
       description: "Number of unknown vulnerabilities."
       type: string
       default: ""
-    total-count:
+    total_count:
       description: "Total number of vulnerabilities."
       type: string
       default: ""
@@ -71,13 +71,13 @@ stages:
           "$[[ inputs.branch ]]" \
           "$[[ inputs.repository ]]" \
           "$[[ inputs.commit ]]" \
-          "$[[ inputs.cloud-provider ]]" \
+          "$[[ inputs.cloud_provider ]]" \
           "$[[ inputs.user ]]" \
-          "$[[ inputs.build-url ]]" \
-          "$[[ inputs.critical-count ]]" \
-          "$[[ inputs.high-count ]]" \
-          "$[[ inputs.medium-count ]]" \
-          "$[[ inputs.low-count ]]" \
-          "$[[ inputs.unknown-count ]]" \
-          "$[[ inputs.total-count ]]" \
-          "$[[ inputs.webhook-url ]]"
+          "$[[ inputs.build_url ]]" \
+          "$[[ inputs.critical_count ]]" \
+          "$[[ inputs.high_count ]]" \
+          "$[[ inputs.medium_count ]]" \
+          "$[[ inputs.low_count ]]" \
+          "$[[ inputs.unknown_count ]]" \
+          "$[[ inputs.total_count ]]" \
+          "$[[ inputs.webhook_url ]]"
