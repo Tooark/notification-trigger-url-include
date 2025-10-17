@@ -1,7 +1,18 @@
 stages:
 - notify
 
+.retry: &retry
+  retry:
+    max: 2
+    when:
+    - runner_system_failure
+    - stuck_or_timeout_failure
+    - api_failure
+    - job_execution_timeout
+    - scheduler_failure
+
 .notify:
+  <<: *retry
   stage: notify
   image: alpine:latest
   before_script:
